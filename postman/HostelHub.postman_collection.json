@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "HostelHub API",
+    "description": "Import this collection into Postman. Start the server before testing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Home",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/"
+      }
+    },
+    {
+      "name": "Add resident",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/residents",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"resident_name\": \"Aarav Sharma\",\n  \"student_id\": \"STU1001\",\n  \"phone\": \"9876543210\",\n  \"course\": \"B.Tech CSE\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get residents",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/residents"
+      }
+    },
+    {
+      "name": "Add room",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/rooms",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"room_name\": \"Room 204\",\n  \"block\": \"A\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get rooms",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/rooms"
+      }
+    },
+    {
+      "name": "Search block A",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/rooms?block=A"
+      }
+    },
+    {
+      "name": "Get room 1",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/rooms/1"
+      }
+    },
+    {
+      "name": "Update room 1",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/rooms/1",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"room_name\": \"Room 205\",\n  \"block\": \"B\",\n  \"status\": \"Available\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Create allotment",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/allotments",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"resident_id\": 1,\n  \"room_id\": 1,\n  \"allotment_date\": \"2026-11-11\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get allotments",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/allotments"
+      }
+    },
+    {
+      "name": "JOIN allotment details",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/allotments/details"
+      }
+    },
+    {
+      "name": "Cancel allotment 1",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/allotments/1"
+      }
+    },
+    {
+      "name": "Delete room 1",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/rooms/1"
+      }
+    },
+    {
+      "name": "Twist test 1 - add Room 204",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/rooms",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"room_name\": \"Room 204\",\n  \"block\": \"A\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Twist test 2 - add room 204, expect 409",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/rooms",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"room_name\": \"room 204\",\n  \"block\": \"B\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Twist test 3 - rename to ROOM 204, expect 409",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/rooms/2",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"room_name\": \"ROOM 204\"\n}"
+        }
+      }
+    }
+  ]
+}
