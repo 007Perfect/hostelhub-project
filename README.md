@@ -54,6 +54,29 @@ Base URL: `https://hostel-hub-api-4670.onrender.com`
 | POST | `/residents` | Add a resident | 201 |
 | GET | `/allotments` | All allotments (`allotment_id`, `resident_id`, `room_id`, `allotment_date`) | 200 |
 | GET | `/allotments/details` | **Join:** allotments with the resident name and the room name | 200 |
+| GET | `/rooms?block=A` | Search rooms by block |
+
+### Search Rooms by Block
+
+HostelHub allows users to search for rooms based on their block name using query parameters.
+
+**Example Request:**
+
+GET `/rooms?block=A`
+
+**Deployed API URL:**
+
+https://hostel-hub-api-4670.onrender.com/rooms?block=A
+
+**Description:**
+
+This endpoint retrieves only the rooms belonging to the specified block. For example, when the user searches for Block A, the API returns all rooms available in Block A.
+
+**Testing:**
+- Method: GET
+- Parameter: `block`
+- Example Value: `A`
+- Expected Status: `200 OK`
 
 **Sample request bodies**
 
@@ -111,3 +134,7 @@ All screenshots are Postman requests to the deployed API.
 **GET /allotments/details** - join of resident name and room name (200 OK)
 
 ![GET allotment details](screenshots/09-api-get-allotments-join.png)
+
+**Search Rooms by Block** - Q_Search 
+
+![Search Rooms by Block](screenshots/search-rooms-by-block.png)
