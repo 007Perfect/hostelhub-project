@@ -1,125 +1,113 @@
-# HostelHub – Room Allotment API
+# HostelHub - Room Allotment System
 
-HostelHub helps a hostel warden manage residents, rooms and room allotments using an Express server and SQLite database.
+**BDF Group Assignment · Backend Development Fundamentals · Theme 10 · Group YG-AIML2B-G10**
 
-## Technologies
-- Node.js
-- Express.js
-- SQLite
-- sqlite and sqlite3 packages
-- Postman
+**GitHub:** https://github.com/007Perfect/hostelhub-project
 
-## Run the project on Windows
-1. Install Node.js.
-2. Extract this ZIP file.
-3. Open the extracted folder in VS Code.
-4. Open Terminal → New Terminal.
-5. Run `npm install`.
-6. Run `npm start`.
-7. Open `http://localhost:3000` in your browser.
-8. Keep the terminal open while testing.
+**Deployed link:** https://hostel-hub-api-4670.onrender.com/
 
-The SQLite database is created automatically in the `database` folder. Stop the server with Ctrl+C. Restart it after changing code. For automatic restarts, use `npm run dev`.
+## Objective
 
-## Database tables
+To build a backend system for the hostel that stores residents, rooms and room allotments in one place, so the warden can quickly see which rooms are free in each block. The project uses an Express server with a SQLite database and provides REST APIs (GET, POST, PUT and DELETE), input validation, search using query parameters, a join endpoint that shows the resident name with the room name, and the rule that no two rooms can have the same name.
 
-### residents
-resident_id, resident_name, student_id, phone, course
+## Problem Statement
 
-### rooms
-room_id, room_name, block, status
+> "Rooms are allotted from a paper file. The warden cannot quickly tell which rooms are free in each block. Please build us a system that fixes this."
 
-### allotments
-allotment_id, resident_id, room_id, allotment_date
+**Our twist: no duplicate names.** Two rooms cannot share a name, even with different capital letters. A duplicate gets `409` and the message `Room 204 already exists`.
 
-The allotments table connects residents and rooms.
+### Team Members
 
-## API routes
+| S.No | Name | Registration Number | Contribution |
+|---|---|---|---|
+| 1 | K GUNEETH | 252U1R6090 | Resident and Room Management |
+| 2 | G SAINADH REDDY | 252U1R6076 | SQLite Database Management |
+| 3 | J DURGA PRASAD | 252U1R6101 | Room Allotment Management |
+| 4 | G ABHISAI | 252U1R6086 | Backend Setup and Server Development |
+| 5 | G SRIJAN | 252U1R6093 | Postman Testing and Documentation |
 
-| Method | URL | Purpose |
-|---|---|---|
-| GET | `/` | Welcome message |
-| GET | `/residents` | Get all residents |
-| POST | `/residents` | Add resident |
-| GET | `/rooms` | Get all rooms |
-| GET | `/rooms?block=A` | Search rooms by block |
-| GET | `/rooms/1` | Get one room |
-| POST | `/rooms` | Add room |
-| PUT | `/rooms/1` | Update room |
-| DELETE | `/rooms/1` | Delete room |
-| GET | `/allotments` | Get all allotments |
-| POST | `/allotments` | Add allotment |
-| GET | `/allotments/details` | JOIN resident and room details |
-| DELETE | `/allotments/1` | Cancel allotment |
+## Run it
 
-## JSON request examples
+Needs [Node.js](https://nodejs.org) 18 or newer.
 
-### Add resident – POST /residents
-```json
-{
-  "resident_name": "Aarav Sharma",
-  "student_id": "STU1001",
-  "phone": "9876543210",
-  "course": "B.Tech CSE"
-}
+```bash
+npm install     # one time
+npm start       # http://localhost:3000
 ```
 
-### Add room – POST /rooms
-```json
-{
-  "room_name": "Room 204",
-  "block": "A"
-}
-```
+The live version is deployed at https://hostel-hub-api-4670.onrender.com/ (on the free plan the first request after a quiet period can take about a minute).
 
-### Update room – PUT /rooms/1
+## Database
+
+Three related tables: **residents**, **rooms** and **allotments**. An allotment links one resident to one room.
+
+## API endpoints
+
+Base URL: `https://hostel-hub-api-4670.onrender.com`
+
+| Method | URL | What it does | Success |
+|---|---|---|---|
+| GET | `/` | Welcome message | 200 |
+| GET | `/rooms` | All rooms with `room_id`, `room_name`, `block`, `status` | 200 |
+| POST | `/rooms` | Add a room | 201 |
+| GET | `/residents` | All residents with `resident_id`, `resident_name`, `student_id`, `phone`, `course` | 200 |
+| POST | `/residents` | Add a resident | 201 |
+| GET | `/allotments` | All allotments (`allotment_id`, `resident_id`, `room_id`, `allotment_date`) | 200 |
+| GET | `/allotments/details` | **Join:** allotments with the resident name and the room name | 200 |
+
+**Sample request bodies**
+
+Add a room (`POST /rooms`):
 ```json
 {
-  "room_name": "Room 205",
-  "block": "B",
+  "room_name": "Test Room 601",
+  "block": "A",
   "status": "Available"
 }
 ```
+Response: `201 Created` with `{ "message": "Room Added Successfully", "room_id": 52 }`
 
-Allowed room statuses: Available, Occupied, Maintenance.
-
-### Add allotment – POST /allotments
+Add a resident (`POST /residents`):
 ```json
 {
-  "resident_id": 1,
-  "room_id": 1,
-  "allotment_date": "2026-11-11"
+  "resident_name": "Test Student",
+  "student_id": "TEST001",
+  "phone": "9876500001",
+  "course": "B.Tech CSE"
 }
 ```
-Add the resident and room first, then use their actual IDs.
+Response: `201 Created` with `{ "message": "Resident Added Successfully", "resident_id": 33 }`
 
-## Special rule: no duplicate room names
+Errors are returned as JSON, for example `400 Bad Request` with `{ "error": "Room name and block are required" }` when the room name or block is missing.
 
-Room names are checked without considering capital letters:
-- Room 204
-- room 204
-- ROOM 204
+## Screenshots
 
-All three count as the same name.
+All screenshots are Postman requests to the deployed API.
 
-Tests:
-1. Add Room 204 → expected 201.
-2. Add room 204 → expected 409.
-3. Add a different room, then rename it to ROOM 204 → expected 409.
+**GET /** - home
 
-## Status codes
-- 200: successful request.
-- 201: new record created.
-- 400: missing or invalid input.
-- 404: record not found.
-- 409: duplicate name or allotment conflict.
-- 500: unexpected server/database problem.
+![GET home](screenshots/10-api-get-home.png)
 
-## Postman
-Import `postman/HostelHub.postman_collection.json`. Start the server first. For POST and PUT requests choose Body → raw → JSON, enter the request body and click Send.
+**GET /rooms** - get all rooms (200 OK)
 
-## Notes
-- Cancel an allotment before deleting its room.
-- An allotted room becomes Occupied. Cancelling the allotment makes it Available.
-- This project uses a simple single-server duplicate check for the classroom assignment.
-- SQL `?` placeholders are used to pass values safely into queries.
+![GET rooms](screenshots/04-api-get-rooms.png)
+
+**POST /rooms** - add a room (201 Created)
+
+![POST room](screenshots/05-api-post-add-room.png)
+
+**GET /residents** - get all residents (200 OK)
+
+![GET residents](screenshots/11-api-get-residents.png)
+
+**POST /residents** - add a resident (201 Created)
+
+![POST resident](screenshots/13-api-post-add-resident.png)
+
+**GET /allotments** - get all allotments (200 OK)
+
+![GET allotments](screenshots/12-api-get-allotments.png)
+
+**GET /allotments/details** - join of resident name and room name (200 OK)
+
+![GET allotment details](screenshots/09-api-get-allotments-join.png)
